@@ -35,11 +35,13 @@ module.exports = {
   ],
   publishers: [
     {
-      name: "@electron-forge/publisher-s3",
+      name: "@electron-forge/publisher-github",
       config: {
-        bucket: "electron-app",
-        endpoint: "http://localhost:9001/",
-        public: true,
+        repository: {
+          owner: "ta1m1kam",
+          name: "tiger-electron-app-forge",
+        },
+        prerelease: true,
       },
     },
   ],

@@ -1,6 +1,15 @@
 import { app, BrowserWindow, autoUpdater, dialog } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
+const { updateElectronApp, UpdateSourceType } = require("update-electron-app");
+
+updateElectronApp({
+  updateSource: {
+    type: UpdateSourceType.ElectronPublicUpdateService,
+    repo: "ta1m1kam/tiger-electron-app-forge",
+  },
+  updateInterval: "5 minutes",
+});
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -42,25 +51,6 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
-  });
-});
-
-setInterval(() => {
-  autoUpdater.checkForUpdates();
-}, 60000);
-
-autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
-  const dialogOpts = {
-    type: "info",
-    buttons: ["Restart", "Later"],
-    title: "Application Update",
-    message: process.platform === "win32" ? releaseNotes : releaseName,
-    detail:
-      "A new version has been downloaded. Restart the application to apply the updates.",
-  };
-
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall();
   });
 });
 
