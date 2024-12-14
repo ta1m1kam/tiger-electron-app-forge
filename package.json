@@ -1,7 +1,7 @@
 {
   "name": "tiger-electron-app-forge",
   "productName": "tiger-electron-app-forge",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "scripts": {
