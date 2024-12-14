@@ -1,15 +1,6 @@
-import { app, BrowserWindow, autoUpdater, dialog } from "electron";
+import { app, BrowserWindow, dialog, autoUpdater } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
-const { updateElectronApp, UpdateSourceType } = require("update-electron-app");
-
-updateElectronApp({
-  updateSource: {
-    type: UpdateSourceType.ElectronPublicUpdateService,
-    repo: "ta1m1kam/tiger-electron-app-forge",
-  },
-  updateInterval: "5 minutes",
-});
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -65,3 +56,59 @@ app.on("window-all-closed", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+const server = "https://update.electronjs.org";
+const feed = `${server}/ta1m1kam/tiger-electron-app-forge/${process.platform}-${
+  process.arch
+}/${app.getVersion()}`;
+
+app.on("ready", () => {
+  if (app.isPackaged) {
+    // パッケージされている（ローカル実行ではない）
+    autoUpdater.setFeedURL({
+      url: feed,
+    });
+    autoUpdater.checkForUpdates(); // アップデートを確認する
+
+    // アップデートのダウンロードが完了したとき
+    autoUpdater.on("update-downloaded", async () => {
+      const returnValue = await dialog.showMessageBox({
+        message: "アップデートあり",
+        detail: "再起動してインストールできます。",
+        buttons: ["再起動", "後で"],
+      });
+      if (returnValue.response === 0) {
+        autoUpdater.quitAndInstall(); // アプリを終了してインストール
+      }
+    });
+
+    // アップデートがあるとき
+    autoUpdater.on("update-available", () => {
+      dialog.showMessageBox({
+        message: "アップデートがあります",
+        buttons: ["OK"],
+      });
+    });
+
+    // アップデートがないとき
+    // autoUpdater.on("update-not-available", () => {
+    //   dialog.showMessageBox({
+    //     message: "アップデートはありません",
+    //     buttons: ["OK"],
+    //   });
+    // });
+
+    // エラーが発生したとき
+    autoUpdater.on("error", () => {
+      dialog.showMessageBox({
+        message: "アップデートエラーが起きました",
+        buttons: ["OK"],
+      });
+    });
+  }
+
+  autoUpdater.checkForUpdates();
+  setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, 30000);
+});
