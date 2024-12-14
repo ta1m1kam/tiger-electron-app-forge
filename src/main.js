@@ -99,12 +99,12 @@ app.on("ready", () => {
     // });
 
     // エラーが発生したとき
-    autoUpdater.on("error", () => {
-      dialog.showMessageBox({
-        message: "アップデートエラーが起きました",
-        buttons: ["OK"],
-      });
-    });
+    // autoUpdater.on("error", () => {
+    //   dialog.showMessageBox({
+    //     message: "アップデートエラーが起きました",
+    //     buttons: ["OK"],
+    //   });
+    // });
   }
 
   autoUpdater.checkForUpdates();

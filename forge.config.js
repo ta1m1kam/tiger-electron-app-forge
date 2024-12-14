@@ -41,7 +41,6 @@ module.exports = {
           owner: "ta1m1kam",
           name: "tiger-electron-app-forge",
         },
-        prerelease: true,
       },
     },
   ],
